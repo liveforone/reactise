@@ -1,11 +1,8 @@
 ## 보일러플레이트 개발 가이드
 
-- 이전 프론트 보일러 플레이트 코드는 styled-component로 스타일링을 진행했다.
-- 현재는 tailwind css를 쓴다. 따라서 코드를 복붙 하는게 전부이나,
-- gpt에게 tailwind css스타일로 코드를 변경해달라고 요구하고, 추가로 범용적인 스타일로 변경한다.
 - backend가 필요하면 chan-node의 chan-nest를 사용하기
-- 현재 계정은 test12@gmail.com / 1111이다.
-- 왜 그러는지 모르겠는데, users dir에 withdraw를 넣으면 파일을 못찾는 에러가 계속 발생한다.
+- 현재 backend와 연동되어 사용 가능한 계정은 test12@gmail.com / 1111이다.
+- 왜 그러는지 모르겠는데, users dir에 withdraw를 넣으면 파일을 못찾는 에러가 계속 발생한다. 따라서 account 폴더를 만들고 따로 관리중이다.
 
 ## 앞으로 적용해볼것
 
@@ -27,17 +24,5 @@
 
 ## 아이콘 참고
 
-> 아이콘에는 반드시 w-x / h-x 를 주어야함. 안그러면 안보임
-
+- 아이콘에는 반드시 w-x / h-x 를 주어야함. 안그러면 안보임
 - [아이콘 검색](https://heroicons.com/)
-
-#### 메세지 아이콘 + 링크
-
-```tsx
-<Link
-  to="/chat"
-  className="inline-flex items-center bg-gray-700 text-white px-2 py-2 rounded text-lg mb-4 hover:bg-gray-500 transition-colors"
->
-  <ChatBubbleLeftIcon className="w-5 h-5" />
-</Link>
-```
