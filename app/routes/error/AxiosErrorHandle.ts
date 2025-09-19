@@ -1,9 +1,9 @@
 import axios from "axios";
 import { getRefreshToken, getUserId } from "../auth/GetToken";
 import type { TokenInfo } from "../users/dto/TokenInfo";
-import { UsersServerApi } from "../users/api/UsersServerApi";
+import { UsersServerApi } from "../api/UsersServerApi";
 import { AuthConstant } from "../auth/AuthConstant";
-import { UsersClientApi } from "../users/api/UsersClientApi";
+import { UsersClientApi } from "../api/UsersClientApi";
 
 function extractUrl(error: any) {
   return error.config.url.replace(/^https?:\/\/localhost:8080/g, "");

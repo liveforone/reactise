@@ -1,10 +1,10 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import type { PostPageDto } from "./dto/PostPage";
-import { PostServerApi } from "./api/PostServerApi";
+import { PostServerApi } from "../api/PostServerApi";
 import { createAuthHeader } from "../util/HeaderUtil";
 import { axiosErrorHandle } from "../error/AxiosErrorHandle";
-import { PostClientApi } from "./api/PostClientApi";
+import { PostClientApi } from "../api/PostClientApi";
 import {
   ArrowLeftStartOnRectangleIcon,
   MagnifyingGlassIcon,
@@ -13,6 +13,7 @@ import {
 } from "@heroicons/react/16/solid";
 import { getAccessToken } from "../auth/GetToken";
 import { Link, useNavigate } from "react-router";
+import { UsersClientApi } from "../api/UsersClientApi";
 
 const PostHome = () => {
   const navigate = useNavigate();
@@ -152,13 +153,13 @@ const PostHome = () => {
           {accessToken == null ? (
             <div className="space-x-4">
               <Link
-                to="/users/login"
+                to={UsersClientApi.LOGIN}
                 className="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-500 transition-colors"
               >
                 로그인
               </Link>
               <Link
-                to="/users/signup"
+                to={UsersClientApi.SIGNUP}
                 className="px-4 py-2 bg-indigo-500 text-white rounded hover:bg-gray-500 transition-colors"
               >
                 회원가입
@@ -167,13 +168,13 @@ const PostHome = () => {
           ) : (
             <div className="space-x-4">
               <Link
-                to="/users/profile"
+                to={UsersClientApi.PROFILE}
                 className="inline-flex items-center bg-gray-700 text-white px-2 py-2 rounded text-lg mb-4 hover:bg-gray-500 transition-colors"
               >
                 <UserIcon className="w-5 h-5" />
               </Link>
               <Link
-                to="/users/logout"
+                to={UsersClientApi.LOGOUT}
                 className="inline-flex items-center bg-gray-700 text-white px-2 py-2 rounded text-lg mb-4 hover:bg-gray-500 transition-colors"
               >
                 <ArrowLeftStartOnRectangleIcon className="w-5 h-5" />

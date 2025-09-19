@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import type { PostPageDto } from "./dto/PostPage";
-import { PostServerApi } from "./api/PostServerApi";
+import { PostServerApi } from "../api/PostServerApi";
 import { getUserId } from "../auth/GetToken";
 import { createAuthHeader } from "../util/HeaderUtil";
 import { axiosErrorHandle } from "../error/AxiosErrorHandle";
 import { useNavigate } from "react-router";
-import { PostClientApi } from "./api/PostClientApi";
+import { PostClientApi } from "../api/PostClientApi";
 import type { PostSummary } from "./dto/PostSummary";
 
 const PostBelongWriter = () => {

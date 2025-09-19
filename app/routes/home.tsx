@@ -4,8 +4,8 @@ import {
   ArrowLeftStartOnRectangleIcon,
   UserIcon,
 } from "@heroicons/react/16/solid";
-import { PostClientApi } from "./post/api/PostClientApi";
-import { UsersClientApi } from "./users/api/UsersClientApi";
+import { PostClientApi } from "./api/PostClientApi";
+import { UsersClientApi } from "./api/UsersClientApi";
 
 const Home = () => {
   const accessToken = getAccessToken();

@@ -4,7 +4,7 @@ import { useNavigate } from "react-router";
 import { getAccessToken } from "../auth/GetToken";
 import { createAuthHeader } from "../util/HeaderUtil";
 import { removeToken, removeUserId } from "../auth/RemoveToken";
-import { UsersServerApi } from "../users/api/UsersServerApi";
+import { UsersServerApi } from "../api/UsersServerApi";
 
 const Logout = () => {
   const navigate = useNavigate();

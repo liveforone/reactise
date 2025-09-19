@@ -1,9 +1,9 @@
 import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
 import axios from "axios";
 import { getUserId } from "../auth/GetToken";
-import { PostServerApi } from "./api/PostServerApi";
+import { PostServerApi } from "../api/PostServerApi";
 import { createAuthHeader } from "../util/HeaderUtil";
-import { PostClientApi } from "./api/PostClientApi";
+import { PostClientApi } from "../api/PostClientApi";
 import { axiosErrorHandle } from "../error/AxiosErrorHandle";
 import {
   ArrowLeftCircleIcon,

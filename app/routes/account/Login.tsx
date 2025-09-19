@@ -1,11 +1,11 @@
 import axios from "axios";
 import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
 import type { TokenInfo } from "../users/dto/TokenInfo";
-import { UsersServerApi } from "../users/api/UsersServerApi";
+import { UsersServerApi } from "../api/UsersServerApi";
 import { AuthConstant } from "../auth/AuthConstant";
 import { axiosErrorHandle } from "../error/AxiosErrorHandle";
 import { getAccessToken } from "../auth/GetToken";
-import { UsersClientApi } from "../users/api/UsersClientApi";
+import { UsersClientApi } from "../api/UsersClientApi";
 import { Link, useNavigate } from "react-router";
 
 const Login = () => {

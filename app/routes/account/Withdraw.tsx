@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import { Link } from "react-router";
-import { UsersServerApi } from "../users/api/UsersServerApi";
+import { UsersServerApi } from "../api/UsersServerApi";
 import { createAuthHeader } from "../util/HeaderUtil";
 
 const Withdraw = () => {

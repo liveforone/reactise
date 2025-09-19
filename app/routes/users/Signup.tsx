@@ -1,9 +1,9 @@
 import axios from "axios";
 import { useState, type ChangeEvent, type FormEvent } from "react";
-import { UsersServerApi } from "./api/UsersServerApi";
+import { UsersServerApi } from "../api/UsersServerApi";
 import { axiosErrorHandle } from "../error/AxiosErrorHandle";
 import { Link } from "react-router";
-import { UsersClientApi } from "./api/UsersClientApi";
+import { UsersClientApi } from "../api/UsersClientApi";
 
 const Signup = () => {
   const [userInput, setUserInput] = useState({

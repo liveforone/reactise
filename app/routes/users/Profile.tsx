@@ -1,11 +1,11 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { UsersServerApi } from "./api/UsersServerApi";
+import { UsersServerApi } from "../api/UsersServerApi";
 import { createAuthHeader } from "../util/HeaderUtil";
 import { axiosErrorHandle } from "../error/AxiosErrorHandle";
 import { Link } from "react-router";
-import { UsersClientApi } from "./api/UsersClientApi";
-import { PostClientApi } from "../post/api/PostClientApi";
+import { UsersClientApi } from "../api/UsersClientApi";
+import { PostClientApi } from "../api/PostClientApi";
 
 interface UsersInfo {
   id: string;
