@@ -3,6 +3,7 @@ import { useState, type ChangeEvent, type FormEvent } from "react";
 import { Link } from "react-router";
 import { UsersServerApi } from "../api/UsersServerApi";
 import { createAuthHeader } from "../util/HeaderUtil";
+import toast from "react-hot-toast";
 
 const Withdraw = () => {
   const [userInput, setUserInput] = useState({
@@ -28,25 +29,9 @@ const Withdraw = () => {
         setIsSubmitted(true);
       })
       .catch(() => {
-        alert("비밀번호가 틀렸습니다.");
+        toast.error("비밀번호가 틀렸습니다.");
       });
   };
-
-  const confirmed = window.confirm("정말 탈퇴하시겠습니까?");
-
-  if (!confirmed) {
-    return (
-      <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-md text-center">
-        <h2 className="text-xl font-bold mb-4">탈퇴가 취소되었습니다.</h2>
-        <Link
-          to="/"
-          className="inline-block px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
-        >
-          홈으로 돌아가기
-        </Link>
-      </div>
-    );
-  }
 
   return (
     <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
