@@ -10,30 +10,29 @@ import { UsersClientApi } from "./api/UsersClientApi";
 const Home = () => {
   const accessToken = getAccessToken();
 
+  const homeLink = new Map<string, string>([
+    ["posts", "게시글"],
+    ["category2", "category2"],
+    ["category3", "category3"],
+    ["category4", "category4"],
+    ["category5", "category5"],
+  ]);
+
   return (
     <div>
       {/* 헤더 */}
       <header className="flex justify-between items-center px-8 py-4 bg-white shadow">
         <div className="text-2xl font-bold text-gray-800">MyApp</div>
         <div className="flex space-x-8">
-          <Link
-            to={PostClientApi.HOME}
-            className="text-lg text-gray-800 font-bold"
-          >
-            게시글
-          </Link>
-          <Link to="/category2" className="text-lg text-gray-800 font-bold">
-            category2
-          </Link>
-          <Link to="/category3" className="text-lg text-gray-800 font-bold">
-            category3
-          </Link>
-          <Link to="/category4" className="text-lg text-gray-800 font-bold">
-            category4
-          </Link>
-          <Link to="/category5" className="text-lg text-gray-800 font-bold">
-            category5
-          </Link>
+          {Array.from(homeLink.entries()).map(([link, name]) => (
+            <Link
+              key={link}
+              to={`/${link}`}
+              className="text-lg text-gray-800 font-bold"
+            >
+              {name}
+            </Link>
+          ))}
         </div>
 
         {accessToken == null ? (
