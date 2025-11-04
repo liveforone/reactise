@@ -33,12 +33,9 @@ const PostHome = () => {
       })
       .then((response) => {
         const newData = response.data;
-        const filteredNewData = newData.postSummaries.filter((newPost) =>
-          postList
-            ? !postList.postSummaries.some(
-                (oldPost) => oldPost.id === newPost.id
-              )
-            : true
+        const existingIds = new Set(postList.postSummaries.map((p) => p.id));
+        const filteredNewData = newData.postSummaries.filter(
+          (newPost) => !existingIds.has(newPost.id)
         );
         setPostList(
           postList
