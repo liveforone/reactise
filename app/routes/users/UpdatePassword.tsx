@@ -23,8 +23,23 @@ const UpdatePassword = () => {
     });
   };
 
+  function validateInputPassword() {
+    if (!inputPassword.originalPw.trim()) {
+      toast.error("기존 비밀번호를 입력해주세요.");
+      return false;
+    }
+    if (!inputPassword.newPw.trim()) {
+      toast.error("새 비밀번호를 입력해주세요.");
+      return false;
+    }
+    return true;
+  }
+
   const submitHandler = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    if (!validateInputPassword()) return;
+
     await axios
       .patch(UsersServerApi.UPDATE_PASSWORD, inputPassword, {
         headers: createAuthHeader(),

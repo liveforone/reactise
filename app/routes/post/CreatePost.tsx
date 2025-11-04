@@ -6,6 +6,7 @@ import { createAuthHeader } from "../util/HeaderUtil";
 import { PostClientApi } from "../api/PostClientApi";
 import { axiosErrorHandle } from "../error/AxiosErrorHandle";
 import { useNavigate } from "react-router";
+import toast from "react-hot-toast";
 
 const CreatePost = () => {
   const navigate = useNavigate();
@@ -31,8 +32,21 @@ const CreatePost = () => {
     });
   };
 
+  function validateInputData() {
+    if (!inputData.title.trim()) {
+      toast.error("제목을 입력해주세요.");
+      return false;
+    }
+    if (!inputData.content.trim()) {
+      toast.error("내용을 입력해주세요");
+      return false;
+    }
+    return true;
+  }
+
   const submitHandler = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (!validateInputData()) return;
     await axios
       .post(PostServerApi.CREATE, inputData, { headers: createAuthHeader() })
       .then((response) => {

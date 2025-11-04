@@ -7,7 +7,11 @@ import { UsersClientApi } from "../api/UsersClientApi";
 import toast from "react-hot-toast";
 
 const Signup = () => {
-  const [userInput, setUserInput] = useState({
+  interface UserInput {
+    username: "";
+    password: "";
+  }
+  const [userInput, setUserInput] = useState<UserInput>({
     username: "",
     password: "",
   });
@@ -22,8 +26,22 @@ const Signup = () => {
     });
   };
 
+  function validateUserInput() {
+    if (!userInput.username.trim()) {
+      toast.error("이메일을 입력해주세요.");
+      return false;
+    }
+
+    if (!userInput.password.trim()) {
+      toast.error("비밀번호를 입력해주세요.");
+      return false;
+    }
+    return true;
+  }
+
   const submitHandler = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (!validateUserInput()) return;
     await axios
       .post(UsersServerApi.SIGNUP, userInput)
       .then((response) => {
@@ -52,7 +70,7 @@ const Signup = () => {
               이메일
             </label>
             <input
-              type="text"
+              type="email"
               name="username"
               placeholder="이메일을 입력하세요"
               onChange={userInputHandler}

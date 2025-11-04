@@ -11,6 +11,7 @@ import {
 } from "@heroicons/react/16/solid";
 import type { PostInfo } from "./dto/PostInfo";
 import { useLocation, useNavigate } from "react-router";
+import toast from "react-hot-toast";
 
 const UpdatePost = () => {
   const navigate = useNavigate();
@@ -58,13 +59,17 @@ const UpdatePost = () => {
 
   const submitHandler = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (!updateData.content.trim()) {
+      toast.error("업데이트할 내용을 입력하세요");
+      return;
+    }
     if (!postInfo) return;
     await axios
       .patch(PostServerApi.UPDATE + postInfo.id, updateData, {
         headers: createAuthHeader(),
       })
       .then((response) => {
-        alert(response.data);
+        toast.success(response.data);
         navigate(PostClientApi.DETAIL + postInfo.id);
       })
       .catch((error: any) => {

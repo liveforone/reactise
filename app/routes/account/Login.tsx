@@ -6,6 +6,7 @@ import { AuthConstant } from "../auth/AuthConstant";
 import { axiosErrorHandle } from "../error/AxiosErrorHandle";
 import { getAccessToken } from "../auth/GetToken";
 import { Link, useNavigate } from "react-router";
+import toast from "react-hot-toast";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -28,8 +29,24 @@ const Login = () => {
     });
   };
 
+  function validateLoginInput() {
+    if (!loginInput.username.trim()) {
+      toast.error("이메일을 입력해주세요.");
+      return false;
+    }
+
+    if (!loginInput.password.trim()) {
+      toast.error("비밀번호를 입력해주세요.");
+      return false;
+    }
+    return true;
+  }
+
   const submitHandler = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    if (!validateLoginInput()) return;
+
     await axios
       .post<TokenInfo>(UsersServerApi.LOGIN, loginInput)
       .then((response) => {
@@ -70,7 +87,7 @@ const Login = () => {
               이메일
             </label>
             <input
-              type="text"
+              type="email"
               name="username"
               className="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               onChange={loginInputHandler}

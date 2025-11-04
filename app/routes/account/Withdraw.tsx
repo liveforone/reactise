@@ -21,6 +21,10 @@ const Withdraw = () => {
 
   const submitHandler = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (!userInput.password.trim()) {
+      toast.error("비밀번호를 입력해주세요.");
+      return;
+    }
     await axios
       .post(UsersServerApi.WITHDRAW, userInput, {
         headers: createAuthHeader(),
