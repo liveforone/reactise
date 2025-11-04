@@ -5,6 +5,7 @@ import { getAccessToken } from "../auth/GetToken";
 import { createAuthHeader } from "../util/HeaderUtil";
 import { removeToken, removeUserId } from "../auth/RemoveToken";
 import { UsersServerApi } from "../api/UsersServerApi";
+import toast from "react-hot-toast";
 
 const Logout = () => {
   const navigate = useNavigate();
@@ -15,16 +16,16 @@ const Logout = () => {
       await axios
         .post(UsersServerApi.LOGOUT, {}, { headers: createAuthHeader() })
         .then((response) => {
-          alert(response.data);
+          toast.success(response.data);
         })
         .catch(() => {
-          alert("토큰이 유효하지 않습니다. 재로그인 후 시도해주세요");
+          toast.error("토큰이 유효하지 않습니다. 재로그인 후 시도해주세요");
         });
 
       removeToken();
       removeUserId();
     } else {
-      alert("이미 로그아웃 되어있습니다.");
+      toast.error("이미 로그아웃 되어있습니다.");
     }
     navigate("/", { replace: true });
   };
