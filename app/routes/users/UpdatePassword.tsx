@@ -6,6 +6,7 @@ import { removeToken } from "../auth/RemoveToken";
 import { UsersClientApi } from "../api/UsersClientApi";
 import { axiosErrorHandle } from "../error/AxiosErrorHandle";
 import { useNavigate } from "react-router";
+import toast from "react-hot-toast";
 
 const UpdatePassword = () => {
   const navigate = useNavigate();
@@ -29,7 +30,7 @@ const UpdatePassword = () => {
         headers: createAuthHeader(),
       })
       .then((response) => {
-        alert(response.data);
+        toast.success(response.data);
         removeToken();
         navigate(UsersClientApi.LOGIN);
       })

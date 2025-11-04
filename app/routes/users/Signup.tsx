@@ -4,6 +4,7 @@ import { UsersServerApi } from "../api/UsersServerApi";
 import { axiosErrorHandle } from "../error/AxiosErrorHandle";
 import { Link } from "react-router";
 import { UsersClientApi } from "../api/UsersClientApi";
+import toast from "react-hot-toast";
 
 const Signup = () => {
   const [userInput, setUserInput] = useState({
@@ -26,7 +27,7 @@ const Signup = () => {
     await axios
       .post(UsersServerApi.SIGNUP, userInput)
       .then((response) => {
-        alert(response.data);
+        toast.success(response.data);
         setIsSubmitted(true);
       })
       .catch((error) => {

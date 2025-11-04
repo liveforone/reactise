@@ -4,6 +4,7 @@ import type { TokenInfo } from "../users/dto/TokenInfo";
 import { UsersServerApi } from "../api/UsersServerApi";
 import { AuthConstant } from "../auth/AuthConstant";
 import { UsersClientApi } from "../api/UsersClientApi";
+import toast from "react-hot-toast";
 
 function extractUrl(error: any) {
   return error.config.url.replace(/^https?:\/\/localhost:8080/g, "");
@@ -32,13 +33,13 @@ export async function axiosErrorHandle(error: any) {
         })
         .catch(() => {
           console.log("Refresh Token 만료");
-          alert("토큰이 만료되었습니다. 재로그인 해주세요");
+          toast.error("토큰이 만료되었습니다. 재로그인 해주세요");
           localStorage.removeItem(AuthConstant.ACCESS_TOKEN);
           localStorage.removeItem(AuthConstant.REFRESH_TOKEN);
           window.location.replace(UsersClientApi.LOGIN);
         });
     } else {
-      alert("에러가 발생했습니다.");
+      toast.error("에러가 발생했습니다.");
       window.location.replace("http://localhost:3000/");
     }
   }
