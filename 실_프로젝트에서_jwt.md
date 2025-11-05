@@ -2,11 +2,14 @@
 
 ## 흐름
 
+> 요청 url/base url 등은 도메인 home url을 넣으면 된다.
+
 - 서버는 cors를 허용해야한다.
 - 서버는 Access-Control-Allow-Credentials을 true로 설정해야한다.
 - 서버는 Access-Control-Allow-Origin 에 와일드카드 사용 금지.
 - 서버는 Access-Control-Allow-Methods 에 와일드카드 사용 금지.
 - 서버는 Access-Control-Allow-Headers 에 와일드카드 사용 금지.
+- spring의 경우 아래와 같다.
 
 ```java
 @Configuration
@@ -20,6 +23,15 @@ public class WebConfig implements WebMvcConfigurer {
             .maxAge(3000) // 원하는 시간만큼 pre-flight 리퀘스트를 캐싱
     }
 }
+```
+
+- nestjs의 경우 아래와 같다.
+
+```typescript
+app.enableCors({
+  origin: "http://frontend-url.com",
+  credentials: true,
+});
 ```
 
 - server -> response body 에 access token을 넣어 전달.
@@ -91,7 +103,23 @@ api.interceptors.response.use(
 ## 스프링에서 SameSite옵션 설정
 
 - ResponseCookie 또는 HttpServletResponse 의 setHeader로 설정가능하다.
-- `httpServletResponse.setHeader("Set-Cookie", "refreshToken=" + refreshToken + "; Path=/; HttpOnly; SameSite=None; Secure; expires=" + date);`
+- spring에서는 아래와 같다.
+
+```java
+httpServletResponse.setHeader("Set-Cookie", "refreshToken=" + refreshToken + "; Path=/; HttpOnly; SameSite=None; Secure; expires=" + date);
+```
+
+- nestjs에는 아래와 같다.
+
+````typescript
+res.cookie('refresh_token', refreshToken, {
+      path: '/auth',
+      httpOnly: true,
+});
+```
+
 - SameSite None을 이용하려면 Secure옵션을 사용해야한다.
 - https 요청에만 쿠키를 설정하는 옵션이다.
 - 이렇게 되면 https 서버에서만 쿠키를 보낼 수 있다.
+
+````
