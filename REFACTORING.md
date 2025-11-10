@@ -59,3 +59,7 @@ catch (error) {
   axiosErrorHandle(error, navigate);
 }
 ```
+
+## 공용 배너
+
+- 배너 디자인을 전체 페이지에서 재활용 할 수 있도록 수정하라.
