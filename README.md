@@ -1,14 +1,17 @@
 ## install
 
-- 폴더명은 탐색기를 이용해서 바꾸는게 속편하다.(자바와 달리 루트
-- 디렉토리명이 크게 영향을 끼치지 않는다.)
+- 폴더명은 탐색기를 이용해서 바꾸는게 속편하다.
+- 자바와 달리 루트 디렉토리명이 크게 영향을 끼치지 않는다.
 - `git clone https://github.com/liveforone/reactise.git 패키지명`
 - .git삭제
 - npm install
 - package.json의 name, version, description을 변경한다.
+- `npx npm-check-updates -u -f "/react*/"`
+- devDependencies를 제외하고는 `npm i 패키지명@latest`을 해준다.
+- devDependecies는 [react package.json](https://github.com/facebook/react/blob/main/package.json)을 참고하여 업데이트한다.
 - 이후 각 readme를 확인한다.
 
-## 주의점
+## Caution
 
 - 왜 그러는지 모르겠는데, users dir에 withdraw를 넣으면 파일을 못찾는 에러가 계속 발생한다. 따라서 account 폴더를 만들고 따로 관리중이다.
 
@@ -35,10 +38,3 @@
 - [] 빈의존성 배열은 처음 마운트 될때만 hook이 실행됨.
 - 의존성 배열에 특정값이 있을때에는 해당 값이 변경되면 hook이 실행됨
 - 의존성 배열을 생략하면 매 랜더링마다 실행된다.
-
-## 앞으로 적용해볼것
-
-- 리팩터링 문서의 리팩터링 할 여지들
-- 공용 헤더를 만드는 것. 다만 너무 복잡도가 증가하고, 헤더마다 디자인이 너무 천차만별인 경우가 있어, 일단은 헤더가 필요하면 home에서 복붙한 후 따로 수정해서 사용하고 있음.
-- 디자인의 경우 각 프로젝트 마다 추구하는 바가 다르므로 이쁘게 잘 꾸며볼것. 구조는 다 완성되어서 복붙 + 수정이 전부임.
-- 디자인이 어려우므로 보일러플레이트를 사용할 땐 아마 디자인 작업만 하지 않을까
