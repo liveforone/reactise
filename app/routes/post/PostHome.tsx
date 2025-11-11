@@ -1,9 +1,9 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 import type { PostPageDto } from "./dto/PostPage";
 import { PostServerApi } from "../api/PostServerApi";
 import { createAuthHeader } from "../util/HeaderUtil";
-import { axiosErrorHandle } from "../error/AxiosErrorHandle";
+import { validateTokenError } from "../error/ValidateTokenErrorHandle";
 import { PostClientApi } from "../api/PostClientApi";
 import {
   ArrowLeftStartOnRectangleIcon,
@@ -14,74 +14,84 @@ import {
 import { getAccessToken } from "../auth/GetToken";
 import { Link, useNavigate } from "react-router";
 import { UsersClientApi } from "../api/UsersClientApi";
+import SyncLoader from "react-spinners/SyncLoader";
 
 const PostHome = () => {
   const navigate = useNavigate();
+
+  const [loading, setLoading] = useState(false);
   const [postList, setPostList] = useState<PostPageDto>({
     postSummaries: [],
     metadata: { lastId: BigInt(0) },
   });
   const [lastId, setLastId] = useState<bigint>(BigInt(0));
+
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [isSearching, setIsSearching] = useState(false);
 
   const getPostPage = async (lastId: bigint = BigInt(0)) => {
-    await axios
-      .get<PostPageDto>(PostServerApi.HOME, {
+    setLoading(true);
+    try {
+      const response = await axios.get<PostPageDto>(PostServerApi.HOME, {
         params: { "last-id": lastId },
         headers: createAuthHeader(),
-      })
-      .then((response) => {
-        const newData = response.data;
-        const existingIds = new Set(postList.postSummaries.map((p) => p.id));
-        const filteredNewData = newData.postSummaries.filter(
-          (newPost) => !existingIds.has(newPost.id)
-        );
-        setPostList(
-          postList
-            ? {
-                ...postList,
-                postSummaries: [...postList.postSummaries, ...filteredNewData],
-              }
-            : newData
-        );
-        setLastId(response.data.metadata.lastId);
-      })
-      .catch((error: any) => {
-        axiosErrorHandle(error);
       });
+
+      const newData = response.data;
+      const existingIds = new Set(postList.postSummaries.map((p) => p.id));
+      const filteredNewData = newData.postSummaries.filter(
+        (newPost) => !existingIds.has(newPost.id)
+      );
+
+      setPostList(
+        postList
+          ? {
+              ...postList,
+              postSummaries: [...postList.postSummaries, ...filteredNewData],
+            }
+          : newData
+      );
+
+      setLastId(response.data.metadata.lastId);
+    } catch (error: any) {
+      validateTokenError(error, navigate);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const getSearchPostPage = async (
     lastId: bigint = BigInt(0),
     query: string
   ) => {
-    await axios
-      .get<PostPageDto>(PostServerApi.SEARCH, {
+    setLoading(true);
+
+    try {
+      const response = await axios.get<PostPageDto>(PostServerApi.SEARCH, {
         params: { keyword: query, "last-id": lastId },
         headers: createAuthHeader(),
-      })
-      .then((response) => {
-        const newData = response.data;
-        if (lastId === BigInt(0)) {
-          // 새로운 검색 → 덮어쓰기
-          setPostList(newData);
-        } else {
-          // 더 불러오기 → 이어붙이기
-          setPostList((prevData) => ({
-            ...prevData,
-            postSummaries: [
-              ...prevData?.postSummaries,
-              ...newData.postSummaries,
-            ],
-            metadata: newData.metadata,
-          }));
-        }
-        setLastId(newData.metadata.lastId);
-      })
-      .catch((error: any) => {
-        axiosErrorHandle(error);
       });
+
+      const newData = response.data;
+
+      if (lastId === BigInt(0)) {
+        // 새로운 검색 → 덮어쓰기
+        setPostList(newData);
+      } else {
+        // 더 불러오기 → 이어붙이기
+        setPostList((prevData) => ({
+          ...prevData,
+          postSummaries: [...prevData?.postSummaries, ...newData.postSummaries],
+          metadata: newData.metadata,
+        }));
+      }
+
+      setLastId(newData.metadata.lastId);
+    } catch (error: any) {
+      validateTokenError(error, navigate);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -180,35 +190,42 @@ const PostHome = () => {
           )}
         </header>
       </div>
-      <div className="flex flex-col items-center p-5">
-        {postList.postSummaries.length === 0 && (
-          <div className="text-gray-500">게시글이 없습니다.</div>
-        )}
 
-        {postList.postSummaries.length > 0 &&
-          postList.postSummaries.map((data) => (
-            <div
-              key={data.id.toString()}
-              onClick={() => handlePostClick(data.id)}
-              className="bg-white shadow-md rounded-lg p-5 mb-5 w-full max-w-2xl cursor-pointer hover:shadow-lg transition"
-            >
-              <h2 className="text-xl font-semibold mb-2">{data.title}</h2>
-              <div className="flex justify-between text-sm text-gray-500">
-                <span>{`작성자: ${data.writer_id}`}</span>
-                <span>{new Date(data.created_date).toLocaleString()}</span>
+      {loading ? (
+        <div className="flex justify-center items-center h-[70vh]">
+          <SyncLoader size={15} color="black" />
+        </div>
+      ) : (
+        <div className="flex flex-col items-center p-5">
+          {postList.postSummaries.length === 0 && (
+            <div className="text-gray-500">게시글이 없습니다.</div>
+          )}
+
+          {postList.postSummaries.length > 0 &&
+            postList.postSummaries.map((data) => (
+              <div
+                key={data.id.toString()}
+                onClick={() => handlePostClick(data.id)}
+                className="bg-white shadow-md rounded-lg p-5 mb-5 w-full max-w-2xl cursor-pointer hover:shadow-lg transition"
+              >
+                <h2 className="text-xl font-semibold mb-2">{data.title}</h2>
+                <div className="flex justify-between text-sm text-gray-500">
+                  <span>{`작성자: ${data.writer_id}`}</span>
+                  <span>{new Date(data.created_date).toLocaleString()}</span>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
 
-        {lastId > BigInt(0) && (
-          <button
-            onClick={handleLoadMore}
-            className="bg-blue-500 text-white px-5 py-2 rounded-lg mb-5 hover:bg-blue-600 transition"
-          >
-            Load More
-          </button>
-        )}
-      </div>
+          {lastId > BigInt(0) && (
+            <button
+              onClick={handleLoadMore}
+              className="bg-blue-500 text-white px-5 py-2 rounded-lg mb-5 hover:bg-blue-600 transition"
+            >
+              Load More
+            </button>
+          )}
+        </div>
+      )}
     </>
   );
 };

@@ -4,13 +4,16 @@ import type { PostPageDto } from "./dto/PostPage";
 import { PostServerApi } from "../api/PostServerApi";
 import { getUserId } from "../auth/GetToken";
 import { createAuthHeader } from "../util/HeaderUtil";
-import { axiosErrorHandle } from "../error/AxiosErrorHandle";
+import { validateTokenError } from "../error/ValidateTokenErrorHandle";
 import { useNavigate } from "react-router";
 import { PostClientApi } from "../api/PostClientApi";
 import type { PostSummary } from "./dto/PostSummary";
+import SyncLoader from "react-spinners/SyncLoader";
 
 const PostBelongWriter = () => {
   const navigate = useNavigate();
+
+  const [loading, setLoading] = useState(false);
   const [postList, setPostList] = useState<PostPageDto>({
     postSummaries: [],
     metadata: { lastId: BigInt(0) },
@@ -18,6 +21,8 @@ const PostBelongWriter = () => {
   const [lastId, setLastId] = useState<bigint>(BigInt(0));
 
   const getPostPage = async (lastId: bigint = BigInt(0)) => {
+    setLoading(true);
+
     try {
       const response = await axios.get<PostPageDto>(
         PostServerApi.BELONG_WRITER,
@@ -41,9 +46,12 @@ const PostBelongWriter = () => {
             }
           : newData
       );
+
       setLastId(response.data.metadata.lastId);
     } catch (error: any) {
-      axiosErrorHandle(error);
+      validateTokenError(error, navigate);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -60,35 +68,43 @@ const PostBelongWriter = () => {
   };
 
   return (
-    <div className="flex flex-col items-center p-5">
-      {postList.postSummaries.length === 0 && (
-        <div className="text-gray-600">게시글이 없습니다.</div>
-      )}
+    <>
+      {loading ? (
+        <div className="flex justify-center items-center h-[70vh]">
+          <SyncLoader size={15} color="black" />
+        </div>
+      ) : (
+        <div className="flex flex-col items-center p-5">
+          {postList.postSummaries.length === 0 && (
+            <div className="text-gray-600">게시글이 없습니다.</div>
+          )}
 
-      {postList.postSummaries.length > 0 &&
-        postList.postSummaries.map((data: PostSummary) => (
-          <div
-            key={data.id.toString()}
-            onClick={() => handlePostClick(data.id)}
-            className="bg-white rounded-lg shadow-md p-5 mb-5 w-full max-w-2xl cursor-pointer hover:shadow-lg transition-shadow"
-          >
-            <h2 className="text-xl font-semibold mb-2">{data.title}</h2>
-            <div className="flex justify-between text-sm text-gray-500">
-              <span>작성자: {data.writer_id}</span>
-              <span>{new Date(data.created_date).toLocaleString()}</span>
-            </div>
-          </div>
-        ))}
+          {postList.postSummaries.length > 0 &&
+            postList.postSummaries.map((data: PostSummary) => (
+              <div
+                key={data.id.toString()}
+                onClick={() => handlePostClick(data.id)}
+                className="bg-white rounded-lg shadow-md p-5 mb-5 w-full max-w-2xl cursor-pointer hover:shadow-lg transition-shadow"
+              >
+                <h2 className="text-xl font-semibold mb-2">{data.title}</h2>
+                <div className="flex justify-between text-sm text-gray-500">
+                  <span>작성자: {data.writer_id}</span>
+                  <span>{new Date(data.created_date).toLocaleString()}</span>
+                </div>
+              </div>
+            ))}
 
-      {lastId > BigInt(0) && (
-        <button
-          onClick={handleLoadMore}
-          className="bg-blue-600 text-white px-5 py-2 rounded-lg text-lg mt-4 hover:bg-blue-700 transition-colors"
-        >
-          Load More
-        </button>
+          {lastId > BigInt(0) && (
+            <button
+              onClick={handleLoadMore}
+              className="bg-blue-600 text-white px-5 py-2 rounded-lg text-lg mt-4 hover:bg-blue-700 transition-colors"
+            >
+              Load More
+            </button>
+          )}
+        </div>
       )}
-    </div>
+    </>
   );
 };
 

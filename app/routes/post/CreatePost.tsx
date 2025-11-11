@@ -1,10 +1,10 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import { getUserId } from "../auth/GetToken";
 import { PostServerApi } from "../api/PostServerApi";
 import { createAuthHeader } from "../util/HeaderUtil";
 import { PostClientApi } from "../api/PostClientApi";
-import { axiosErrorHandle } from "../error/AxiosErrorHandle";
+import { validateTokenError } from "../error/ValidateTokenErrorHandle";
 import { useNavigate } from "react-router";
 import toast from "react-hot-toast";
 
@@ -47,14 +47,19 @@ const CreatePost = () => {
   const submitHandler = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!validateInputData()) return;
+
     await axios
       .post(PostServerApi.CREATE, inputData, { headers: createAuthHeader() })
       .then((response) => {
-        alert(response.data);
+        toast.success(response.data);
         navigate(PostClientApi.HOME);
       })
-      .catch((error) => {
-        axiosErrorHandle(error);
+      .catch((error: AxiosError) => {
+        validateTokenError(error, navigate);
+        if (error.response?.status === 400) {
+          toast.error("잘못된 입력입니다.");
+          return;
+        }
       });
   };
 

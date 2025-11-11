@@ -1,9 +1,9 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
 import type { TokenInfo } from "../users/dto/TokenInfo";
 import { UsersServerApi } from "../api/UsersServerApi";
 import { AuthConstant } from "../auth/AuthConstant";
-import { axiosErrorHandle } from "../error/AxiosErrorHandle";
+import { validateTokenError } from "../error/ValidateTokenErrorHandle";
 import { getAccessToken } from "../auth/GetToken";
 import { Link, useNavigate } from "react-router";
 import toast from "react-hot-toast";
@@ -60,9 +60,14 @@ const Login = () => {
           response.data.refreshToken
         );
       })
-      .catch((error: any) => {
-        axiosErrorHandle(error);
+      .catch((error: AxiosError) => {
+        validateTokenError(error, navigate);
+        if (error.response?.status === 400) {
+          toast.error("잘못된 입력입니다.");
+          return;
+        }
       });
+
     setSubmit(true);
   };
 

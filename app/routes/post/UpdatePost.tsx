@@ -4,7 +4,7 @@ import { getUserId } from "../auth/GetToken";
 import { PostServerApi } from "../api/PostServerApi";
 import { createAuthHeader } from "../util/HeaderUtil";
 import { PostClientApi } from "../api/PostClientApi";
-import { axiosErrorHandle } from "../error/AxiosErrorHandle";
+import { validateTokenError } from "../error/ValidateTokenErrorHandle";
 import {
   ArrowLeftCircleIcon,
   ArrowUpCircleIcon,
@@ -12,6 +12,7 @@ import {
 import type { PostInfo } from "./dto/PostInfo";
 import { useLocation, useNavigate } from "react-router";
 import toast from "react-hot-toast";
+import SyncLoader from "react-spinners/SyncLoader";
 
 const UpdatePost = () => {
   const navigate = useNavigate();
@@ -45,7 +46,7 @@ const UpdatePost = () => {
             content: response.data.content || "",
           });
         } catch (error: any) {
-          axiosErrorHandle(error);
+          validateTokenError(error, navigate);
         }
       };
       fetchPost();
@@ -73,11 +74,20 @@ const UpdatePost = () => {
         navigate(PostClientApi.DETAIL + postInfo.id);
       })
       .catch((error: any) => {
-        axiosErrorHandle(error);
+        validateTokenError(error, navigate);
+        if (axios.isAxiosError(error) && error.response?.status === 400) {
+          toast.error("잘못된 입력입니다.");
+          return;
+        }
       });
   };
 
-  if (!postInfo) return <div className="text-center mt-10">로딩중...</div>;
+  if (!postInfo)
+    return (
+      <div className="flex justify-center items-center h-[70vh]">
+        <SyncLoader size={15} color="black" />
+      </div>
+    );
 
   return (
     <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md mt-10">

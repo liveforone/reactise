@@ -1,10 +1,10 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import { UsersServerApi } from "../api/UsersServerApi";
 import { createAuthHeader } from "../util/HeaderUtil";
 import { removeToken } from "../auth/RemoveToken";
 import { UsersClientApi } from "../api/UsersClientApi";
-import { axiosErrorHandle } from "../error/AxiosErrorHandle";
+import { validateTokenError } from "../error/ValidateTokenErrorHandle";
 import { useNavigate } from "react-router";
 import toast from "react-hot-toast";
 
@@ -39,7 +39,6 @@ const UpdatePassword = () => {
     event.preventDefault();
 
     if (!validateInputPassword()) return;
-
     await axios
       .patch(UsersServerApi.UPDATE_PASSWORD, inputPassword, {
         headers: createAuthHeader(),
@@ -49,8 +48,12 @@ const UpdatePassword = () => {
         removeToken();
         navigate(UsersClientApi.LOGIN);
       })
-      .catch((error) => {
-        axiosErrorHandle(error);
+      .catch((error: AxiosError) => {
+        validateTokenError(error, navigate);
+        if (error.response?.status === 400) {
+          toast.error("잘못된 입력입니다.");
+          return;
+        }
       });
   };
 

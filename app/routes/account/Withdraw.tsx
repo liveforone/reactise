@@ -1,11 +1,13 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useState, type ChangeEvent, type FormEvent } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { UsersServerApi } from "../api/UsersServerApi";
 import { createAuthHeader } from "../util/HeaderUtil";
 import toast from "react-hot-toast";
+import { validateTokenError } from "../error/ValidateTokenErrorHandle";
 
 const Withdraw = () => {
+  const navigate = useNavigate();
   const [userInput, setUserInput] = useState({
     password: "",
   });
@@ -21,10 +23,12 @@ const Withdraw = () => {
 
   const submitHandler = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
     if (!userInput.password.trim()) {
       toast.error("비밀번호를 입력해주세요.");
       return;
     }
+
     await axios
       .post(UsersServerApi.WITHDRAW, userInput, {
         headers: createAuthHeader(),
@@ -32,8 +36,12 @@ const Withdraw = () => {
       .then(() => {
         setIsSubmitted(true);
       })
-      .catch(() => {
-        toast.error("비밀번호가 틀렸습니다.");
+      .catch((error: AxiosError) => {
+        validateTokenError(error, navigate);
+        if (error.response?.status === 400) {
+          toast.error("비밀번호가 틀렸습니다.");
+          return;
+        }
       });
   };
 

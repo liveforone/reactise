@@ -1,7 +1,7 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import { UsersServerApi } from "../api/UsersServerApi";
-import { axiosErrorHandle } from "../error/AxiosErrorHandle";
+import { validateTokenError } from "../error/ValidateTokenErrorHandle";
 import { Link } from "react-router";
 import { UsersClientApi } from "../api/UsersClientApi";
 import toast from "react-hot-toast";
@@ -48,8 +48,11 @@ const Signup = () => {
         toast.success(response.data);
         setIsSubmitted(true);
       })
-      .catch((error) => {
-        axiosErrorHandle(error);
+      .catch((error: AxiosError) => {
+        if (error.response?.status === 400) {
+          toast.error("잘못된 입력입니다.");
+          return;
+        }
       });
   };
 
