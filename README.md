@@ -1,43 +1,31 @@
-## install
+# Reactiler - The React Boilerplate made by chankim
 
-- `git clone https://github.com/liveforone/reactise.git pkgName`
-- Remove `.git`
-- Rename the Project. Change the folder name, name, version and description in package.json.
-- `npm install`
+## Installation
 
-## Maintenance
-
-- `npx npm-check-updates -u -f "/react*/"`
-- Except for devDependencies `npm i 패키지명@latest`
-- If you want update pkg in devDependecies, Check [react package.json](https://github.com/facebook/react/blob/main/package.json) before you update.
-
-## Caution
-
-- I'm not sure why, but whenever I put `withdraw` in the `users` directory, I keep getting a file-not-found error. So, I created an `account` folder and am managing it separately.
-
-## Dependencies used in the project
-
-> Copy and Paste it!
-
+- React Router is highly sensitive, and when you remove or add dependencies after cloning a project, the project structure can easily become corrupted, frequently causing the application to stop working correctly.
+- Therefore, instead of cloning this boilerplate, it is recommended to initialize a new React Router project and then copy and paste the code according to the instructions below.
+- When deploying the project to static hosting platforms such as GitHub Pages or Cloudflare Pages, Axios cannot be used.
+- Since only the native fetch API is available, this boilerplate does not use Axios at all and relies exclusively on fetch.
 - `npm install @heroicons/react`
-- `npm i axios`
 - `npm i react-hot-toast`
+- Since this project uses Vite, make sure to install Tailwind CSS using the Vite-specific setup.
+- `npm install tailwindcss @tailwindcss/vite`
+- COPY List - The files listed below are the ones you need to copy.
+  - Add `<Toaster />` to App function in root.tsx
+  - app.css
+  - routes.ts
+  - All files in routes dir.
 
-## Icon reference note
+## Search Icon in herocions.com
 
-- You need to specify `w-x` and `h-x` values for the icons.
-- Otherwise, the icon won't be visible.
-- [Search icons](https://heroicons.com/)
+- [heroicons.com](https://heroicons.com)
 
-## routing
+## When running in npm dev under strict mode, useEffect runs twice.
 
-- Routing is handled in the `routes.ts` file.
-- From version 7 onward, the traditional `react-router-dom` is not used.
-- If you want to refer to routing documentation, make sure to set the version to v7 in the React Router docs.
-- If you replace `useNavigate()` with `window.location`, you lose all the benefits of an SPA. `useNavigate()` allows page transitions without a full page reload.
-
-## When running in `npm dev` under strict mode, `useEffect` runs twice.
-
-- In `npm dev`, React runs `useEffect` twice when in strict mode.
-- As a result, features like `toast` or `alert` executed inside `useEffect` may appear twice on the screen.
+- In `npm dev`, React runs useEffect twice when in strict mode
+- As a result, features like toast or alert executed inside useEffect may appear twice on the screen.
 - However, this is intended behavior and will not appear this way in production.
+
+## Explain of Why I separate account and users dir.
+
+- I'm not sure why, but whenever I put withdraw in the users directory, I keep getting a file-not-found error. So, I created an account folder and am managing it separately.
