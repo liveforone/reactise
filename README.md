@@ -1,4 +1,4 @@
-# Reactiler - The React Boilerplate made by chankim
+# Reactise - The React Boilerplate made by chankim
 
 ## Installation
 
